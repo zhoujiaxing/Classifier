@@ -31,6 +31,7 @@ class Classifier(object):
 		self.vectorizer = TfidfVectorizer()
 		self.train_X = []
 		self.train_Y = []
+		self.train_swp = []
 		self.train_text = []
 		self.category = category
 		self.tool = Tool(category)
@@ -41,11 +42,11 @@ class Classifier(object):
 		#add positive elements 120
 		count = 1
 		for data in datas:
-			tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
+			#tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
 			categorys = data['category']
 			text = data['text']
 			if self.tool.categoryisok(categorys):
-				self.train_X.append(tfidf_vec)
+				self.train_swp.append(text)
 				self.train_Y.append(1)
 				if count < 11:
 					self.train_text.append(text)
@@ -59,11 +60,11 @@ class Classifier(object):
 		for category in self.category_anther:
 			count = 1
 			for data in datas:
-				tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
+				#tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
 				categorys = data['category']
 				text = data['text']
 				if self.tool.categoryisoks(category,categorys):
-					self.train_X.append(tfidf_vec)
+					self.train_swp.append(text)
 					self.train_Y.append(0)
 					self.train_text.append(text)
 					count = count + 1
@@ -71,8 +72,13 @@ class Classifier(object):
 					print("%s is over.....")%category
 					break
 			print count
+		self.vectorizer.fit_transfrom(self.train_text)
+		for text in self.train_swp:
+			ifidf = self.vectorizer.transfrom(text)
+			array = tfidf.toarray()[0]
+			self.train_X.append(array)
 		self.classifier.fit(self.train_X,self.train_Y)
-		self.vectorizer.fit_transform(self.train_text)
+		#self.vectorizer.fit_transform(self.train_text)
 		print "train is over...."
 	def getarget(self,text):
 		tfidf = self.vectorizer.transform(text)
