@@ -1,6 +1,10 @@
-from sklearn.linear_model import LogisticRegression 
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import TfidfVectorizer 
 import mongocli
 import cPickle
+import sys
+reload(sys)  
+sys.setdefaultencoding('utf8') 
 class Tool(object):
 	#cates=["Auto","Business","Cricket","doc","Education","Entertainment","Health","Lifestyle","National","Politics","Sports","Technology","Top Stories","World"]
 	def __init__(self,category="Auto"):
@@ -24,8 +28,10 @@ class Tool(object):
 class Classifier(object):
 	def __init__(self,category="Auto"):
 		self.classifier = LogisticRegression()
+		self.vectorizer = TfidfVectorizer()
 		self.train_X = []
 		self.train_Y = []
+		self.train_text = []
 		self.category = category
 		self.tool = Tool(category)
 		self.category_anther = self.tool.category_anther
@@ -37,14 +43,17 @@ class Classifier(object):
 		for data in datas:
 			tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
 			categorys = data['category']
+			text = data['text']
 			if self.tool.categoryisok(categorys):
 				self.train_X.append(tfidf_vec)
 				self.train_Y.append(1)
+				self.train_text.append(text)
 				count = count + 1
 			if count > 120:
 				print ("%s is over....")%self.category
 				break
 		print count
+		#print text.encode('utf8')
 		#add negative elements 120 divide into 12 part
 		for category in self.category_anther:
 			count = 1
@@ -55,6 +64,7 @@ class Classifier(object):
 				if self.tool.categoryisoks(category,categorys):
 					self.train_X.append(tfidf_vec)
 					self.train_Y.append(0)
+					self.train_text.append(text)
 					count = count + 1
 				if count > 10:
 					print("%s is over.....")%category
