@@ -38,11 +38,8 @@ class Classifier(object):
 		for data in datas:
 			tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
 			categorys = data['category']
-<<<<<<< HEAD
 			text = data['text']
 			count = 1
-=======
->>>>>>> 03fee8d8b6810a96e4b34fd7b51a6937efc95c4a
 			if self.tool.categoryisok(categorys):
 				self.train_X.append(tfidf_vec)
 				self.train_Y.append(1)
@@ -58,29 +55,23 @@ class Classifier(object):
 			for data in datas:
 				tfidf_vec = cPickle.loads(data['feature']).toarray()[0]
 				categorys = data['category']
-<<<<<<< HEAD
 				text = data['text']
 				count = 1
 				if self.tool.categoryisoks(category,categorys):
 					self.train_X.append(tfidf_vec)
 					self.train_Y.append(0)
 					self.train_text.append(text)
-=======
 				if self.tool.categoryisoks(category,categorys):
 					self.train_X.append(tfidf_vec)
 					self.train_Y.append(0)
 					count = count + 1
->>>>>>> 03fee8d8b6810a96e4b34fd7b51a6937efc95c4a
 				if count > 10:
 					print("%s is over.....")%category
 					break
-<<<<<<< HEAD
 		print "train is over..."
 		print text
 	def trainClassifier(self):
-=======
 			print count
->>>>>>> 03fee8d8b6810a96e4b34fd7b51a6937efc95c4a
 		self.classifier.fit(self.train_X,self.train_Y)
 		print "train is over...."
 	def getarget(self,text):
