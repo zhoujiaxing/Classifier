@@ -61,9 +61,12 @@ class Classifier(object):
 					break
 			print count
 		self.classifier.fit(self.train_X,self.train_Y)
+		self.vectorizer.fit_transform(self.train_text)
 		print "train is over...."
 	def getarget(self,text):
-		return self.classifier.predict(text)
+		tfidf = self.vectorizer.transform(text)
+		array = tfidf.toarray()[0]
+		return self.classifier.predict(array)
 
 if __name__ == "__main__":
 	cf=Classifier()
