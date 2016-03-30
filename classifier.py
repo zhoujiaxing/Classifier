@@ -26,6 +26,7 @@ class Classifier(object):
 		self.classifier = LogisticRegression()
 		self.train_X = []
 		self.train_Y = []
+		self.train_text = []
 		self.category = category
 		self.tool = Tool(category)
 		self.category_anther = self.tool.category_anther
@@ -36,10 +37,12 @@ class Classifier(object):
 		for data in datas:
 			tfidf_vec = cPickle.loads(data['feature'])
 			categorys = data['category']
+			text = data['text']
 			count = 1
 			if self.tool.categoryisok(categorys):
 				self.train_X.append(tfidf_vec)
 				self.train_Y.append(1)
+				self.train_text.append(text)
 				count = count + 1
 			if count > 120:
 				break
@@ -48,26 +51,16 @@ class Classifier(object):
 			for data in datas:
 				tfidf_vec = cPickle.loads(data['feature'])
 				categorys = data['category']
+				text = data['text']
 				count = 1
 				if self.tool.categoryisoks(category,categorys):
 					self.train_X.append(tfidf_vec)
 					self.train_Y.append(0)
+					self.train_text.append(text)
 				if count > 10:
 					break
 		print "train is over..."
-
-		'''
-		self.train_X.append([1,0,1,0,0,0,0,0,0,0])
-		self.train_Y.append(1)
-		self.train_X.append([1,0,0,0,0,0,0,0,0,1])
-		self.train_Y.append(1)
-		self.train_X.append([1,0,0,1,1,0,0,0,1,1])
-		self.train_Y.append(1)
-		self.train_X.append([0,0,0,0,0,1,1,1,1,1])
-		self.train_Y.append(0)
-		self.train_X.append([0,0,0,0,0,0,1,1,1,1])
-		self.train_Y.append(0)
-		'''
+		print text
 	def trainClassifier(self):
 		self.classifier.fit(self.train_X,self.train_Y)
 	def getarget(self,text):
