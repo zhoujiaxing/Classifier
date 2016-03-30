@@ -47,7 +47,8 @@ class Classifier(object):
 			if self.tool.categoryisok(categorys):
 				self.train_X.append(tfidf_vec)
 				self.train_Y.append(1)
-				self.train_text.append(text)
+				if count < 11:
+					self.train_text.append(text)
 				count = count + 1
 			if count > 120:
 				print ("%s is over....")%self.category
@@ -77,9 +78,10 @@ class Classifier(object):
 		tfidf = self.vectorizer.transform(text)
 		array = tfidf.toarray()[0]
 		return self.classifier.predict(array)
-
+'''
 if __name__ == "__main__":
 	cf=Classifier()
 	cf.trainclassifier()
 	#target=cf.getarget([0,0,0,0,0,0,0,0,1,0])
 	print "game over"
+'''
